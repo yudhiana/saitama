@@ -37,7 +37,7 @@ func (ec *executionContext) _Role_id(ctx context.Context, field graphql.Collecte
 			return obj.ID, nil
 		},
 		nil,
-		ec.marshalNInt642int,
+		ec.marshalNInt642int64,
 		true,
 		true,
 	)
@@ -95,7 +95,7 @@ func (ec *executionContext) _Role_role_type(ctx context.Context, field graphql.C
 			return obj.RoleType, nil
 		},
 		nil,
-		ec.marshalNInt642int,
+		ec.marshalNInt642int64,
 		true,
 		true,
 	)

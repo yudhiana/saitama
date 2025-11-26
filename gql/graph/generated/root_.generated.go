@@ -326,9 +326,9 @@ var sources = []*ast.Source{
     deleted_at: Time
 }`, BuiltIn: false},
 	{Name: "../schemas/user_roles_schema.graphqls", Input: `type UserRole {
-	id: ID!
-	user_id: ID!
-	role_id: ID!
+	id: Int64!
+	user_id: Int64!
+	role_id: Int64!
 	created_at: Time!
 	updated_at: Time!
     deleted_at: Time

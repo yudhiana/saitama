@@ -18,16 +18,16 @@ type ResponseUsersList struct {
 }
 
 type Role struct {
-	ID        int        `json:"id"`
+	ID        int64      `json:"id"`
 	RoleName  string     `json:"role_name"`
-	RoleType  int        `json:"role_type"`
+	RoleType  int64      `json:"role_type"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
 type User struct {
-	ID        int        `json:"id"`
+	ID        int64      `json:"id"`
 	Name      string     `json:"name"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
@@ -35,9 +35,9 @@ type User struct {
 }
 
 type UserRole struct {
-	ID        string     `json:"id"`
-	UserID    string     `json:"user_id"`
-	RoleID    string     `json:"role_id"`
+	ID        int64      `json:"id"`
+	UserID    int64      `json:"user_id"`
+	RoleID    int64      `json:"role_id"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
