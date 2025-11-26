@@ -1,0 +1,8 @@
+type Role {
+	id: ID!
+	role_name: String!
+	role_type: ID!
+	created_at: Time!
+	updated_at: Time!
+    deleted_at: Time
+}

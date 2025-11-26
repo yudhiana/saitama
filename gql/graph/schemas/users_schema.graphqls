@@ -1,0 +1,19 @@
+# GraphQL schema 
+# Define your types, queries, and mutations here.
+scalar Time
+
+type ResponseUsers {  
+  items: User!
+}
+
+type ResponseUsersList {  
+  items: [User]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  created_at: Time!
+  updated_at: Time!
+  deleted_at: Time
+}

@@ -1,0 +1,8 @@
+type UserRole {
+	id: ID!
+	user_id: ID!
+	role_id: ID!
+	created_at: Time!
+	updated_at: Time!
+    deleted_at: Time
+}
