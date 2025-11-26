@@ -1,6 +1,9 @@
 # GraphQL schema 
 # Define your types, queries, and mutations here.
+
 scalar Time
+scalar Int64
+scalar Int8
 
 type ResponseUsers {  
   items: User!
@@ -11,7 +14,7 @@ type ResponseUsersList {
 }
 
 type User {
-  id: ID!
+  id: Int64!
   name: String!
   created_at: Time!
   updated_at: Time!

@@ -1,7 +1,7 @@
 type Role {
-	id: ID!
+	id: Int64!
 	role_name: String!
-	role_type: ID!
+	role_type: Int64!
 	created_at: Time!
 	updated_at: Time!
     deleted_at: Time

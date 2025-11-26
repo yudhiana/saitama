@@ -37,7 +37,7 @@ func (ec *executionContext) _Role_id(ctx context.Context, field graphql.Collecte
 			return obj.ID, nil
 		},
 		nil,
-		ec.marshalNID2string,
+		ec.marshalNInt642int,
 		true,
 		true,
 	)
@@ -50,7 +50,7 @@ func (ec *executionContext) fieldContext_Role_id(_ context.Context, field graphq
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int64 does not have child fields")
 		},
 	}
 	return fc, nil
@@ -95,7 +95,7 @@ func (ec *executionContext) _Role_role_type(ctx context.Context, field graphql.C
 			return obj.RoleType, nil
 		},
 		nil,
-		ec.marshalNID2string,
+		ec.marshalNInt642int,
 		true,
 		true,
 	)
@@ -108,7 +108,7 @@ func (ec *executionContext) fieldContext_Role_role_type(_ context.Context, field
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int64 does not have child fields")
 		},
 	}
 	return fc, nil

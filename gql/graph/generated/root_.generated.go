@@ -318,9 +318,9 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "../schemas/roles_schema.graphqls", Input: `type Role {
-	id: ID!
+	id: Int64!
 	role_name: String!
-	role_type: ID!
+	role_type: Int64!
 	created_at: Time!
 	updated_at: Time!
     deleted_at: Time
@@ -335,7 +335,10 @@ var sources = []*ast.Source{
 }`, BuiltIn: false},
 	{Name: "../schemas/users_schema.graphqls", Input: `# GraphQL schema 
 # Define your types, queries, and mutations here.
+
 scalar Time
+scalar Int64
+scalar Int8
 
 type ResponseUsers {  
   items: User!
@@ -346,7 +349,7 @@ type ResponseUsersList {
 }
 
 type User {
-  id: ID!
+  id: Int64!
   name: String!
   created_at: Time!
   updated_at: Time!
