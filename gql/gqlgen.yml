@@ -123,7 +123,7 @@ call_argument_directives_with_null: true
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-#  - "saitama/gql/graph/model"
+ - "saitama/internal/common/models"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -154,6 +154,7 @@ models:
   # do not need to worry about interoperability and only expect small numbers.
   Int:
     model:
+      - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int32
   Int64:
     model:  
@@ -164,3 +165,12 @@ models:
   Time:
     model:
       - github.com/99designs/gqlgen/graphql.Time
+  Filter:
+    model:
+      - saitama/internal/common/models.Filter
+  ExtraParams:
+    model:
+      - saitama/internal/common/models.ExtraParams
+  Pagination:
+    model:
+      - saitama/internal/common/models.Pagination

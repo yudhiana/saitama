@@ -1,11 +1,11 @@
-package service
+package usecase
 
 import (
 	"context"
-	"saitama/internal/models"
+	"saitama/modules/users/models"
 )
 
-type UserServiceRepository interface {
+type userUsecaseInterface interface {
 	CreateUser(ctx context.Context, username string, email string) (uint64, error)
 	GetUser(ctx context.Context, id uint64) (*models.User, error)
 }

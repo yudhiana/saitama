@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"saitama/internal/models"
+	"saitama/modules/users/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

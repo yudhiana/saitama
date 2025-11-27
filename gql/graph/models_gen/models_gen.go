@@ -3,18 +3,20 @@
 package modelsGen
 
 import (
+	"saitama/internal/common/models"
 	"time"
 )
 
 type Query struct {
 }
 
-type ResponseUsers struct {
+type ResponseUser struct {
 	Items *User `json:"items"`
 }
 
-type ResponseUsersList struct {
-	Items []*User `json:"items"`
+type ResponseUserList struct {
+	Items      []*User            `json:"items"`
+	Pagination *models.Pagination `json:"pagination"`
 }
 
 type Role struct {

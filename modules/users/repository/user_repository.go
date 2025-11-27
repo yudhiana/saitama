@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"saitama/internal/models"
+
+	"saitama/modules/users/models"
 
 	"gorm.io/gorm"
 )

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"saitama/internal/models"
+	"saitama/modules/users/models"
 )
 
 type UserRepository interface {

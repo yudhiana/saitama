@@ -1,16 +1,13 @@
 # GraphQL schema 
 # Define your types, queries, and mutations here.
 
-scalar Time
-scalar Int64
-scalar Int8
-
-type ResponseUsers {  
+type ResponseUser {  
   items: User!
 }
 
-type ResponseUsersList {  
+type ResponseUserList {  
   items: [User]!
+  pagination: Pagination!
 }
 
 type User {
@@ -20,4 +17,9 @@ type User {
   created_at: Time!
   updated_at: Time!
   deleted_at: Time
+}
+
+extend type Query {
+  getUser(id: Int64!): ResponseUser!
+  getUserList(option: QueryOption): ResponseUserList!
 }

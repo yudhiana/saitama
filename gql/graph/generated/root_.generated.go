@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"saitama/internal/common/models"
 	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -32,21 +33,34 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Query() QueryResolver
 }
 
 type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Pagination struct {
+		HasNext     func(childComplexity int) int
+		HasPrevious func(childComplexity int) int
+		Page        func(childComplexity int) int
+		PerPage     func(childComplexity int) int
+		TotalItems  func(childComplexity int) int
+		TotalPages  func(childComplexity int) int
+	}
+
 	Query struct {
+		GetUser     func(childComplexity int, id int64) int
+		GetUserList func(childComplexity int, option *models.QueryOption) int
 	}
 
-	ResponseUsers struct {
+	ResponseUser struct {
 		Items func(childComplexity int) int
 	}
 
-	ResponseUsersList struct {
-		Items func(childComplexity int) int
+	ResponseUserList struct {
+		Items      func(childComplexity int) int
+		Pagination func(childComplexity int) int
 	}
 
 	Role struct {
@@ -96,19 +110,92 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 	_ = ec
 	switch typeName + "." + field {
 
-	case "ResponseUsers.items":
-		if e.complexity.ResponseUsers.Items == nil {
+	case "Pagination.hasNext":
+		if e.complexity.Pagination.HasNext == nil {
 			break
 		}
 
-		return e.complexity.ResponseUsers.Items(childComplexity), true
+		return e.complexity.Pagination.HasNext(childComplexity), true
 
-	case "ResponseUsersList.items":
-		if e.complexity.ResponseUsersList.Items == nil {
+	case "Pagination.hasPrevious":
+		if e.complexity.Pagination.HasPrevious == nil {
 			break
 		}
 
-		return e.complexity.ResponseUsersList.Items(childComplexity), true
+		return e.complexity.Pagination.HasPrevious(childComplexity), true
+
+	case "Pagination.page":
+		if e.complexity.Pagination.Page == nil {
+			break
+		}
+
+		return e.complexity.Pagination.Page(childComplexity), true
+
+	case "Pagination.perPage":
+		if e.complexity.Pagination.PerPage == nil {
+			break
+		}
+
+		return e.complexity.Pagination.PerPage(childComplexity), true
+
+	case "Pagination.totalItems":
+		if e.complexity.Pagination.TotalItems == nil {
+			break
+		}
+
+		return e.complexity.Pagination.TotalItems(childComplexity), true
+
+	case "Pagination.totalPages":
+		if e.complexity.Pagination.TotalPages == nil {
+			break
+		}
+
+		return e.complexity.Pagination.TotalPages(childComplexity), true
+
+	case "Query.getUser":
+		if e.complexity.Query.GetUser == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getUser_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetUser(childComplexity, args["id"].(int64)), true
+
+	case "Query.getUserList":
+		if e.complexity.Query.GetUserList == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getUserList_args(ctx, rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetUserList(childComplexity, args["option"].(*models.QueryOption)), true
+
+	case "ResponseUser.items":
+		if e.complexity.ResponseUser.Items == nil {
+			break
+		}
+
+		return e.complexity.ResponseUser.Items(childComplexity), true
+
+	case "ResponseUserList.items":
+		if e.complexity.ResponseUserList.Items == nil {
+			break
+		}
+
+		return e.complexity.ResponseUserList.Items(childComplexity), true
+
+	case "ResponseUserList.pagination":
+		if e.complexity.ResponseUserList.Pagination == nil {
+			break
+		}
+
+		return e.complexity.ResponseUserList.Pagination(childComplexity), true
 
 	case "Role.created_at":
 		if e.complexity.Role.CreatedAt == nil {
@@ -243,7 +330,11 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	opCtx := graphql.GetOperationContext(ctx)
 	ec := executionContext{opCtx, e, 0, 0, make(chan graphql.DeferredResult)}
-	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
+	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputExtraParams,
+		ec.unmarshalInputFilter,
+		ec.unmarshalInputQueryOption,
+	)
 	first := true
 
 	switch opCtx.Operation.Operation {
@@ -325,6 +416,40 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
+	{Name: "../schemas/master_schema.graphqls", Input: `scalar Int64
+scalar Int8
+scalar Time
+scalar Any
+scalar map
+
+
+input QueryOption {
+	condition: String
+	page: Int
+	limit: Int	
+	order: String
+	filter: [Filter]
+	extraParams : [ExtraParams]
+}
+
+input Filter {
+	key: String
+	value: String
+}
+
+input ExtraParams {
+	key: String
+	value: Any
+}
+
+type Pagination {
+	page: Int!
+	totalPages: Int!
+	totalItems: Int!
+	perPage: Int!
+	hasNext: Boolean!
+	hasPrevious: Boolean!
+}`, BuiltIn: false},
 	{Name: "../schemas/roles_schema.graphqls", Input: `type Role {
 	id: Int64!
 	role_name: String!
@@ -344,16 +469,13 @@ var sources = []*ast.Source{
 	{Name: "../schemas/users_schema.graphqls", Input: `# GraphQL schema 
 # Define your types, queries, and mutations here.
 
-scalar Time
-scalar Int64
-scalar Int8
-
-type ResponseUsers {  
+type ResponseUser {  
   items: User!
 }
 
-type ResponseUsersList {  
+type ResponseUserList {  
   items: [User]!
+  pagination: Pagination!
 }
 
 type User {
@@ -363,6 +485,11 @@ type User {
   created_at: Time!
   updated_at: Time!
   deleted_at: Time
+}
+
+extend type Query {
+  getUser(id: Int64!): ResponseUser!
+  getUserList(option: QueryOption): ResponseUserList!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
