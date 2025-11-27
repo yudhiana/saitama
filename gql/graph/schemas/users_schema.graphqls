@@ -16,6 +16,7 @@ type ResponseUsersList {
 type User {
   id: Int64!
   name: String!
+  email: String!
   created_at: Time!
   updated_at: Time!
   deleted_at: Time
