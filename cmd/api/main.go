@@ -1,52 +1,19 @@
 package main
 
 import (
-	"saitama/gql/graph/generated"
-	"saitama/gql/graph/resolvers"
-
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/handler/extension"
-	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/gin-gonic/gin"
+	"log"
+	"saitama/internal/bootstrap"
 )
 
 func main() {
-	// Setting up Gin
-	r := gin.Default()
-	r.POST("/query", graphqlHandler())
-	r.GET("/", playgroundHandler())
-	r.Run()
-}
+	// Initialize bootstrap container
+	container := bootstrap.NewContainer()
 
-// Defining the Graphql handler
-func graphqlHandler() gin.HandlerFunc {
-	// NewExecutableSchema and Config are in the generated.go file
-	// Resolver is in the resolver.go file
-	h := handler.New(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{}}))
+	// sentry.InitSentry()
 
-	// Server setup:
-	h.AddTransport(transport.Options{})
-	h.AddTransport(transport.GET{})
-	h.AddTransport(transport.POST{})
-
-	// h.SetQueryCache(lru.New[*ast.QueryDocument](1000))
-
-	h.Use(extension.Introspection{})
-	// h.Use(extension.AutomaticPersistedQuery{
-	// 	Cache: lru.New[string](100),
-	// })
-
-	return func(c *gin.Context) {
-		h.ServeHTTP(c.Writer, c.Request)
-	}
-}
-
-// Defining the Playground handler
-func playgroundHandler() gin.HandlerFunc {
-	h := playground.Handler("GraphQL", "/query")
-
-	return func(c *gin.Context) {
-		h.ServeHTTP(c.Writer, c.Request)
+	// Initialize and start server
+	err := container.StartServer()
+	if err != nil {
+		log.Fatalf("Server failed to start: %v", err)
 	}
 }

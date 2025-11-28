@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	commonModels "saitama/internal/common/models"
 	"saitama/modules/users/models"
 	"saitama/modules/users/repository"
 
@@ -14,7 +15,7 @@ type userUsecase struct {
 	repo repository.UserRepository
 }
 
-func NewUserUsecase(db *gorm.DB, repo repository.UserRepository) userUsecaseInterface {
+func NewUserUsecase(db *gorm.DB, repo repository.UserRepository) UserUsecaseInterface {
 	return &userUsecase{
 		db:   db,
 		repo: repo,
@@ -36,4 +37,13 @@ func (uc *userUsecase) GetUser(ctx context.Context, id uint64) (*models.User, er
 	}
 
 	return userData, nil
+}
+
+func (uc *userUsecase) GetUserList(ctx context.Context, option *commonModels.QueryOption) ([]models.User, error) {
+	userList, err := uc.repo.GetUserList(ctx, option)
+	if err != nil {
+		return nil, err
+	}
+
+	return userList, nil
 }

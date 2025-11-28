@@ -7,7 +7,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"saitama/gql/graph/generated"
 	modelsGen "saitama/gql/graph/models_gen"
 	db "saitama/infrastructure/sqlite"
@@ -39,7 +38,26 @@ func (r *queryResolver) GetUser(ctx context.Context, id int64) (*modelsGen.Respo
 
 // GetUserList is the resolver for the getUserList field.
 func (r *queryResolver) GetUserList(ctx context.Context, option *models.QueryOption) (*modelsGen.ResponseUserList, error) {
-	panic(fmt.Errorf("not implemented: GetUserList - getUserList"))
+	uc := usecase.NewUserUsecase(db.GetDatabaseConnection(), repository.NewUserRepository(db.GetDatabaseConnection()))
+	users, err := uc.GetUserList(ctx, option)
+	if err != nil {
+		return nil, err
+	}
+	return &modelsGen.ResponseUserList{
+		Items: func() []*modelsGen.User {
+			var userList []*modelsGen.User
+			for _, user := range users {
+				userList = append(userList, &modelsGen.User{
+					ID:        int64(user.ID),
+					Name:      user.Name,
+					Email:     user.Email,
+					CreatedAt: user.CreatedAt,
+					UpdatedAt: user.UpdatedAt,
+				})
+			}
+			return userList
+		}(),
+	}, nil
 }
 
 // Query returns generated.QueryResolver implementation.
