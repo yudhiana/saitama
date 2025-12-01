@@ -10,7 +10,7 @@ type ResponseUserList {
   pagination: Pagination!
 }
 
-type User {
+type User @key(fields: "id") {
   id: Int64!
   name: String!
   email: String!

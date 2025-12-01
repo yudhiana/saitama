@@ -20,10 +20,10 @@ exec:
   # worker_limit: 1000
 
 # Uncomment to enable federation
-# federation:
-#   filename: graph/federation.go
-#   package: graph
-#   version: 2
+federation:
+  filename: graph/generated/federation.go
+  package: generated
+  version: 2
 #   options:
 #     computed_requires: true
 

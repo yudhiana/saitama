@@ -37,6 +37,8 @@ type User struct {
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
+func (User) IsEntity() {}
+
 type UserRole struct {
 	ID        int64      `json:"id"`
 	UserID    int64      `json:"user_id"`
